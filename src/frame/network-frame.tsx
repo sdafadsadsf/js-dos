@@ -57,7 +57,7 @@ export function NetworkFrame() {
                 selectClass="w-full"
                 label={t("server") + ":"}
                 selected={server}
-                values={["netherlands", "newyork", "singapore"]}
+                values={["netherlands"]}
                 disabled={disabled}
                 onSelect={onServer}
             />

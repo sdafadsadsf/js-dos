@@ -72,7 +72,7 @@ const initialState: {
     ci: boolean,
     ciStartedAt: number,
     network: {
-        server: "netherlands" | "newyork" | "singapore",
+        server: "netherlands",
         room: string,
         ipx: "connecting" | "connected" | "disconnected" | "error",
     },
@@ -126,7 +126,7 @@ const initialState: {
         driveIo: [],
     },
     network: {
-        server: (lStorage.getItem("net.server") ?? "netherlands") as any,
+        server: "netherlands",
         room: randomRoom(),
         ipx: "disconnected",
     },

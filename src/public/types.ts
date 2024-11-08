@@ -31,7 +31,7 @@ export interface DosOptions {
     workerThread: boolean,
     mouseCapture: boolean,
     onEvent: (event: DosEvent, ci?: any /* CommandInterface */) => void,
-    server: "netherlands" | "newyork" | "singapore",
+    server: "netherlands",
     room: string,
     fullScreen: boolean,
     sockdriveBackend: {

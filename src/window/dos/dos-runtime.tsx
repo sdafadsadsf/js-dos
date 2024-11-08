@@ -65,8 +65,7 @@ function useLog(ci: CommandInterface): void {
                     dispatch(uiSlice.actions.showToast({
                         message: t("preloading_sockdrive") + " " +
                             (isFork[name] ? "@" + name : name) + " — " +
-                            (Math.round(preloadProgress[drive] - rest) / 1024 / 1024).toFixed(2) + "/" +
-                            (Math.round(preloadProgress[drive] / 1024 / 1024)) + "Mb",
+                            Math.round((preloadProgress[drive] - rest) * 100 / preloadProgress[drive]) + "%",
                         long: true,
                     }));
                 }
