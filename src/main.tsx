@@ -219,6 +219,10 @@ export const Dos: DosFn = (element: HTMLDivElement,
         setIpx(options.ipx);
     }
 
+    if (options.ipxBackend) {
+        setIpxBackend(options.ipxBackend);
+    }
+
     if (options.room) {
         setRoom(options.room);
     }

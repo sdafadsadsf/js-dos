@@ -19,7 +19,7 @@ export function NetworkFrame() {
     const ipxLink =
         network.status === "connected" ?
             location.href + searchSeparator() +
-            "ipx=1&server=" + selected + "&room=" + room :
+            "ipx=1&ipxBackend=" + selected + "&room=" + room :
             null;
 
     function setRoom(room: string) {

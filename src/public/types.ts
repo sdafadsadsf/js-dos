@@ -37,6 +37,7 @@ export interface DosOptions {
     mouseCapture: boolean,
     onEvent: (event: DosEvent, ci?: any /* CommandInterface */) => void,
     ipx: NamedHost[],
+    ipxBackend: string,
     room: string,
     fullScreen: boolean,
     sockdriveBackend: NamedHost,
