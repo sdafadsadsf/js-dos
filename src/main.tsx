@@ -105,8 +105,12 @@ export const Dos: DosFn = (element: HTMLDivElement,
         store.dispatch(dosSlice.actions.mouseCapture(capture));
     }
 
-    function setServer(server: DosOptions["server"]) {
-        store.dispatch(dosSlice.actions.setServer(server));
+    function setIpx(backends: DosOptions["ipx"]) {
+        store.dispatch(dosSlice.actions.setIpxBackends(backends));
+    }
+
+    function setIpxBackend(backend: string) {
+        store.dispatch(dosSlice.actions.setIpxBackend(backend));
     }
 
     function setRoom(room: DosOptions["room"]) {
@@ -211,8 +215,8 @@ export const Dos: DosFn = (element: HTMLDivElement,
         setWorkerThread(options.workerThread);
     }
 
-    if (options.server) {
-        setServer(options.server);
+    if (options.ipx) {
+        setIpx(options.ipx);
     }
 
     if (options.room) {
@@ -297,7 +301,8 @@ export const Dos: DosFn = (element: HTMLDivElement,
         setBackendLocked,
         setWorkerThread,
         setMouseCapture,
-        setServer,
+        setIpx,
+        setIpxBackend,
         setRoom,
         setFrame,
         setBackground,

@@ -8,33 +8,35 @@ import { uiSlice } from "../store/ui";
 import { Dispatch } from "@reduxjs/toolkit";
 
 export function NetworkFrame() {
-    const network = useSelector((state: State) => state.dos.network);
+    const network = useSelector((state: State) => state.dos.ipx);
+    const backends = network.backends;
+    const selected = network.backend;
     const room = network.room;
-    const server = network.server;
-    const disabled = network.ipx !== "disconnected";
+    const backend = network.backends.find((v) => v.name === selected) ?? backends[0];
+    const disabled = network.status !== "disconnected";
     const t = useT();
     const dispatch = useDispatch();
     const ipxLink =
-        network.ipx === "connected" ?
+        network.status === "connected" ?
             location.href + searchSeparator() +
-            "ipx=1&server=" + network.server + "&room=" + room :
+            "ipx=1&server=" + selected + "&room=" + room :
             null;
 
     function setRoom(room: string) {
         dispatch(dosSlice.actions.setRoom(room));
     }
 
-    function setServer(server: string) {
-        dispatch(dosSlice.actions.setServer(server as any));
+    function setIpxBackend(backend: string) {
+        dispatch(dosSlice.actions.setIpxBackend(backend));
     }
 
     function toggleIpx() {
-        if (network.ipx === "connected") {
+        if (network.status === "connected") {
             dispatch(dosSlice.actions.disconnectIpx({}));
         } else {
             dispatch(dosSlice.actions.connectIpx({
                 room,
-                address: "wss://" + server + ".dos.zone",
+                address: backend.host,
             }) as any);
         }
     }
@@ -47,7 +49,7 @@ export function NetworkFrame() {
     }
 
     function onServer(newServer: string) {
-        setServer(newServer);
+        setIpxBackend(newServer);
     }
 
     return <div class="network-frame frame-root items-start px-4 relative">
@@ -56,8 +58,8 @@ export function NetworkFrame() {
                 class="text-sm"
                 selectClass="w-full"
                 label={t("server") + ":"}
-                selected={server}
-                values={["netherlands"]}
+                selected={backend.name}
+                values={backends.map((b) => b.name)}
                 disabled={disabled}
                 onSelect={onServer}
             />
@@ -73,12 +75,12 @@ export function NetworkFrame() {
                 value={room}></input>
         </div>
         <Checkbox
-            class={"mt-4 " + (network.ipx === "error" ? "error" : "")}
+            class={"mt-4 " + (network.status === "error" ? "error" : "")}
             onChange={toggleIpx}
             label="IPX"
-            checked={network.ipx === "connected"}
-            disabled={network.ipx === "connecting"}
-            intermediate={network.ipx === "connecting"}
+            checked={network.status === "connected"}
+            disabled={network.status === "connecting"}
+            intermediate={network.status === "connecting"}
         />
 
         {ipxLink !== null && <div class="mt-4 text-sm alert alert-success shadow-lg flex flex-col">

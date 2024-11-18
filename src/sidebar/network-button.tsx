@@ -6,7 +6,7 @@ export function NetworkButton(props: {
     class?: string,
 }) {
     const hightlight = useSelector((state: State) => state.ui.frame) === "network";
-    const inactive = useSelector((state: State) => state.dos.network.ipx !== "connected");
+    const inactive = useSelector((state: State) => state.dos.ipx.status !== "connected");
     const dispatch = useDispatch();
 
     function onClick() {

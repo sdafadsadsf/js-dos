@@ -12,6 +12,11 @@ export interface InitFileEntry {
 export type InitFsEntry = InitBundleEntry | InitFileEntry;
 export type InitFs = InitFsEntry | InitFsEntry[];
 
+export interface NamedHost {
+    name: string,
+    host: string,
+}
+
 export interface DosOptions {
     url: string,
     dosboxConf: string,
@@ -31,13 +36,10 @@ export interface DosOptions {
     workerThread: boolean,
     mouseCapture: boolean,
     onEvent: (event: DosEvent, ci?: any /* CommandInterface */) => void,
-    server: "netherlands",
+    ipx: NamedHost[],
     room: string,
     fullScreen: boolean,
-    sockdriveBackend: {
-        name: string,
-        host: string,
-    },
+    sockdriveBackend: NamedHost,
     autoStart: boolean,
     kiosk: boolean,
     imageRendering: ImageRendering,
@@ -61,7 +63,8 @@ export interface DosProps {
     setBackendLocked(locked: boolean): void;
     setWorkerThread(capture: DosOptions["workerThread"]): void;
     setMouseCapture(capture: DosOptions["mouseCapture"]): void;
-    setServer(server: DosOptions["server"]): void;
+    setIpx(ipx: DosOptions["ipx"]): void;
+    setIpxBackend(backend: string): void;
     setRoom(room: DosOptions["room"]): void;
     setFrame(frame: "network"): void;
     setBackground(background: string | null): void;

@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { DosAction, getNonSerializableStore, makeStore, postJsDosEvent } from "../store";
 import { Emulators } from "emulators";
 import { lStorage } from "../host/lstorage";
+import { NamedHost } from "../public/types";
 
 const alphabet = "qwertyuiopasdfghjklzxcvbnm1234567890";
 declare const emulators: Emulators;
@@ -71,10 +72,11 @@ const initialState: {
     stats: EmulatorStats,
     ci: boolean,
     ciStartedAt: number,
-    network: {
-        server: "netherlands",
+    ipx: {
+        backends: NamedHost[],
+        backend: string,
         room: string,
-        ipx: "connecting" | "connected" | "disconnected" | "error",
+        status: "connecting" | "connected" | "disconnected" | "error",
     },
     imageRendering: ImageRendering,
     sockdriveWrite: boolean,
@@ -125,10 +127,14 @@ const initialState: {
         driveBufferedAmount: 0,
         driveIo: [],
     },
-    network: {
-        server: "netherlands",
+    ipx: {
+        backends: [{
+            name: "dos.zone",
+            host: "wss://netherlands.dos.zone",
+        }],
+        backend: lStorage.getItem("net.ipx.server") ?? "netherlands",
         room: randomRoom(),
-        ipx: "disconnected",
+        status: "disconnected",
     },
     ci: false,
     ciStartedAt: 0,
@@ -295,7 +301,7 @@ export const dosSlice = createSlice({
             }
         },
         connectIpx: (s, a: { payload: { room: string, address: string } }) => {
-            if (s.network.ipx === "connected") {
+            if (s.ipx.status === "connected") {
                 throw new Error("Already connected");
             }
 
@@ -304,7 +310,7 @@ export const dosSlice = createSlice({
             }
 
             const { room, address } = a.payload;
-            s.network.ipx = "connecting";
+            s.ipx.status = "connecting";
             (a as unknown as DosAction).asyncStore((store) => {
                 const nonSerializableStore = getNonSerializableStore(store);
                 if (!nonSerializableStore.ci) {
@@ -327,20 +333,33 @@ export const dosSlice = createSlice({
             });
         },
         statusIpx: (s, a: { payload: "error" | "connected" | "connecting" }) => {
-            s.network.ipx = a.payload;
+            s.ipx.status = a.payload;
         },
         disconnectIpx: (s, a) => {
-            s.network.ipx = "disconnected";
+            s.ipx.status = "disconnected";
             (a as unknown as DosAction).asyncStore((store) => {
                 getNonSerializableStore(store).ci?.networkDisconnect(0 /* IPX */);
             });
         },
         setRoom: (s, a: { payload: string }) => {
-            s.network.room = a.payload;
+            s.ipx.room = a.payload;
         },
-        setServer: (s, a: { payload: typeof initialState.network.server }) => {
-            s.network.server = a.payload;
-            lStorage.setItem("net.server", a.payload);
+        setIpxBackends: (s, a: { payload: NamedHost[] }) => {
+            s.ipx.backends = a.payload;
+            const selected = lStorage.getItem("net.ipx.server");
+            if (selected !== null && a.payload.find((b) => b.name === selected) !== undefined) {
+                s.ipx.backend = selected;
+            } else {
+                s.ipx.backend = a.payload[0].name;
+                lStorage.setItem("net.ipx.server", s.ipx.backend);
+            }
+        },
+        setIpxBackend: (s, a: { payload: string }) => {
+            const backend = s.ipx.backends.find((v) => v.name === a.payload);
+            if (backend) {
+                s.ipx.backend = backend.name;
+                lStorage.setItem("net.ipx.server", a.payload);
+            }
         },
         setSockdriveWrite: (s, a: { payload: boolean }) => {
             s.sockdriveWrite = a.payload;
