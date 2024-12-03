@@ -6,7 +6,7 @@ const translations: {[lang: string]: {[key: string]: string} } = {
     ru: {
         hello: "Привет",
         hello_guest: "Привет, гость!",
-        mobile_controls: "Моибльное управление",
+        mobile_controls: "Мобильное управление",
         mirrored_controls: "Отразить управление",
         scale_controls: "Масштаб управления",
         enter_name_of_drive: "Введите название диска",

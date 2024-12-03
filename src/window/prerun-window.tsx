@@ -68,7 +68,7 @@ function SecretKey() {
             .then(({ token, account }) => {
                 if (token === knownToken) {
                     dispatch(authSlice.actions.setAccount(account));
-                    if (nonSerializableStore.options.url) {
+                    if (account !== null && nonSerializableStore.options.url) {
                         loadBundleFromUrl(nonSerializableStore.options.url, store).catch((e) => {
                             store.dispatch(dosSlice.actions.bndError(e.message));
                         });
